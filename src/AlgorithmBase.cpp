@@ -127,8 +127,8 @@ bool AlgorithmBase::isColliding(float threshold){
 }
 
 void AlgorithmBase::move(){
-    const float r = 0.016f; //wheel radius (m)
-    const float L = 0.0875f; //wheel base (m)
+    const float r = 0.03f; //wheel radius (m)
+    const float L = 0.153f; //wheel base (m)
 
     float vLeft = ((2.0f*_desiredLinearVelocity) - (L*_desiredAngularVelocity)) / (2.0f*r); //rad/s
     float vRight = ((2.0f*_desiredLinearVelocity) + (L*_desiredAngularVelocity)) / (2.0f*r); //rad/s
