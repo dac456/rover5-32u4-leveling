@@ -16,11 +16,13 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Wire)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Wire/utility)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/AStar32U4)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LSM303)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/L3G)
 
 #print_board_list()
 #print_programmer_list()
 
-file(GLOB C_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINKS src/*.cpp src/*.c Wire/*.cpp Wire/utility/*.c AStar32U4/*.cpp)
+file(GLOB C_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINKS src/*.cpp src/*.c Wire/*.cpp Wire/utility/*.c AStar32U4/*.cpp LSM303/*.cpp L3G/*.cpp)
 
 
 generate_arduino_firmware(rover5-leveling
