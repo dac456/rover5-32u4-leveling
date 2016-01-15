@@ -14,7 +14,7 @@ private:
     PidController<float>* _headingPid;
 
 public:
-    AlgorithmHillClimb(RoverHardware* hwd, uint16_t maxTurnSpeed = 100, uint16_t maxForwardSpeed = 100);
+    AlgorithmHillClimb(RoverHardware* hwd, float maxAngular = 10.0, float maxLinear = 0.34, int maxRpm = 320);
     ~AlgorithmHillClimb();
 
 

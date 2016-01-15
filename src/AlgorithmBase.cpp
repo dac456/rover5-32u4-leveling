@@ -137,7 +137,7 @@ void AlgorithmBase::move(){
     int16_t rpmLeft = static_cast<int16_t>(floor(vLeft * 9.551f));
     int16_t rpmRight = static_cast<int16_t>(floor(vRight * 9.551f));
 
-    //TODO: assumes full 6V. need to account for battery degredation
+    //TODO: assumes full 9V. need to account for battery degredation
     float dutyCycleLeft = static_cast<float>(rpmLeft) / static_cast<float>(_maxRpm);
     int16_t pwmLeft = static_cast<int16_t>(floor(dutyCycleLeft * 400.0f));
 

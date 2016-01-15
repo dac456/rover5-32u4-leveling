@@ -4,8 +4,8 @@ float lerp(float v0, float v1, float t){
     return v0 + t*(v1-v0);
 }
 
-AlgorithmHillClimb::AlgorithmHillClimb(RoverHardware* hwd, uint16_t maxTurnSpeed, uint16_t maxForwardSpeed)
-    : AlgorithmBase(hwd, maxTurnSpeed, maxForwardSpeed),
+AlgorithmHillClimb::AlgorithmHillClimb(RoverHardware* hwd, float maxAngular, float maxLinear, int maxRpm)
+    : AlgorithmBase(hwd, maxAngular, maxLinear, maxRpm),
       _inclined(false),
       _reversing(false),
       _timeLastCollide(0),
@@ -48,7 +48,7 @@ void AlgorithmHillClimb::actImpl(uint16_t dt){
 
     if(_reversing){
         _reverseCount++;
-        setDesiredLinearVelocity(-(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.1f));
+        setDesiredLinearVelocity(-(((fabs(pitchFiltered())/90.0f) * 0.27) + 0.1f));
         setDesiredAngularVelocity(1.5f);
         move();
 
@@ -58,7 +58,7 @@ void AlgorithmHillClimb::actImpl(uint16_t dt){
         }
     }
     else{
-        setDesiredLinearVelocity(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.1f);
+        setDesiredLinearVelocity(((fabs(pitchFiltered())/90.0f) * 0.27) + 0.1f);
         setDesiredAngularVelocity(0.0f);
         move();
     }
