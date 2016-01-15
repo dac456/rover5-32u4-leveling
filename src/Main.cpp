@@ -22,6 +22,9 @@ void initialize(){
     hwd->gyro->init();
     hwd->gyro->enableDefault();
 
+    hwd->altimeter->init();
+    hwd->altimeter->enableDefault();
+
     alg = new AlgorithmHillClimb(hwd, 10.0f, 0.27f, 86);
 
     randomSeed(analogRead(0));
@@ -45,7 +48,7 @@ int main(int argc, char* argv[])
 
             //Dump the Z reading from the accelerometer for debugging
             char buf[8];
-            sprintf(buf, "%8.6f", alg->yawFiltered());
+            sprintf(buf, "%8.6f", alg->getRotZf());
             Serial1.println(buf);
             //hwd->lcd->gotoXY(0,1);
             //hwd->lcd->print(buf);

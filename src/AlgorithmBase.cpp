@@ -7,6 +7,7 @@ AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLine
       _maxRpm(maxRpm),
       _accelY(0),
       _accelZ(0),
+      _altitude(0.0f),
       _timeLastTurn(0),
       _timeLastCollision(0),
       _lastSpeed(0),
@@ -26,6 +27,8 @@ AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLine
     _pitch = new CompFilter<float>(0.98f);
     _heading = new CompFilter<float>(0.5f);
     //_heading = new LowpassFilter<float>(0.96f);
+
+    _altFilter = new MovingAverage<float>(-92.0f);
 }
 
 AlgorithmBase::~AlgorithmBase(){
@@ -39,6 +42,8 @@ AlgorithmBase::~AlgorithmBase(){
 
     delete _pitch;
     delete _heading;
+
+    delete _altFilter;
 }
 
 char* AlgorithmBase::getName(){
@@ -104,6 +109,10 @@ float AlgorithmBase::pitchFiltered(){
 
 float AlgorithmBase::yawFiltered(){
     return _heading->getFilteredValue();
+}
+
+float AlgorithmBase::altitude(){
+    return _altitude;
 }
 
 bool AlgorithmBase::isColliding(float threshold){
@@ -193,6 +202,8 @@ void AlgorithmBase::sense(uint16_t dt){
         _pitch->integrateValues(-this->getRotYf(), this->pitch() * (180.0f/M_PI), dt);
     }
     _heading->integrateValues(this->getRotZf(), this->yaw(), dt);
+
+    _altitude = _altFilter->getFilteredValue(_hwd->altimeter->pressureToAltitudeMeters(_hwd->altimeter->readPressureMillibars()));
 
     float Xf = getAccelXf();
     float Yf = getAccelYf();

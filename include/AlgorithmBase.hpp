@@ -30,6 +30,9 @@ private:
     CompFilter<float>* _heading;
     //LowpassFilter<float>* _heading;
 
+    MovingAverage<float>* _altFilter;
+    float _altitude;
+
     uint16_t _timeLastTurn;
     uint16_t _timeLastCollision;
 
@@ -68,6 +71,8 @@ public:
 
     float pitchFiltered();
     float yawFiltered();
+
+    float altitude();
 
     bool isColliding(float threshold);
 

@@ -8,7 +8,7 @@ class MovingAverage{
 private:
     T _offset;
     T _values[NUM_SAMPLES];
-    
+
 public:
     MovingAverage(T offset = 0) : _offset(offset){
         for(short i=0; i<NUM_SAMPLES; i++){
@@ -16,20 +16,20 @@ public:
         }
     }
     ~MovingAverage(){}
-    
+
     T getFilteredValue(T val){
         _shiftValues();
         _values[0] = val + _offset;
-        
-        
+
+
         T s = T(0);
         for(auto v : _values){
             s += v;
         }
-        
-        return floor(float(s)/float(NUM_SAMPLES));
+
+        return (float(s)/float(NUM_SAMPLES));
     }
-    
+
 private:
     void _shiftValues(){
         for(short i=NUM_SAMPLES-1; i>0; i--){

@@ -8,6 +8,7 @@
 #include <AStar32U4Buttons.h>
 #include <LSM303.h>
 #include <L3G.h>
+#include <LPS.h>
 
 #include "MovingAverage.hpp"
 #include "CompFilter.hpp"
@@ -19,16 +20,19 @@ struct RoverHardware{
         motors = new AStar32U4Motors;
         compass = new LSM303;
         gyro = new L3G;
+        altimeter = new LPS;
     }
     ~RoverHardware(){
         delete motors;
         delete compass;
         delete gyro;
+        delete altimeter;
     }
 
     AStar32U4Motors* motors;
     LSM303* compass;
     L3G* gyro;
+    LPS* altimeter;
 };
 
 #endif
