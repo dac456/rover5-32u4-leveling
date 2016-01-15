@@ -27,7 +27,7 @@ public:
             s += v;
         }
 
-        return (float(s)/float(NUM_SAMPLES));
+        return static_cast<T>(float(s)/float(NUM_SAMPLES));
     }
 
 private:
