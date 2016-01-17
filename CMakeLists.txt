@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.8)
 #====================================================================#
 #  Setup Project                                                     #
 #====================================================================#
-project(zumo_leveling C CXX ASM)
+project(rover-32u4-leveling C CXX)
 
 #SET(ASM_OPTIONS "-x assembler-with-cpp")
 #SET(CMAKE_ASM_FLAGS "${CFLAGS} ${ASM_OPTIONS}" )

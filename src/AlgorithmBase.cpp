@@ -121,7 +121,6 @@ bool AlgorithmBase::isColliding(float threshold){
 
     if(_xyMag.size() > 1){
         if( ((_xyMag[0] - _xyMag[1]) <= 0.0f) && (_xyMag[0] >= 0.0f) && (fabs(_xyMag[0] - _xyMag[1]) >= threshold) ){
-            logger.printAction(COLLISION);
 
             _timeLastCollision = millis();
             return true;
@@ -153,7 +152,6 @@ void AlgorithmBase::move(){
     float dutyCycleRight = static_cast<float>(rpmRight) / static_cast<float>(_maxRpm);
     int16_t pwmRight = static_cast<int16_t>(floor(dutyCycleRight * 400.0f));
 
-    logger.printAction(pwmLeft);
     _hwd->motors->setSpeeds(pwmLeft, pwmRight);
 }
 
@@ -174,7 +172,7 @@ void AlgorithmBase::setDesiredLinearVelocity(float vel){
     _desiredLinearVelocity = vel;
     _clampSpeed();
 
-    logger.printNewDesiredLinearVel(vel);
+    logger.printf(PRINT_DESIRED_VEL, vel);
 }
 
 void AlgorithmBase::step(uint16_t dt){
@@ -187,8 +185,8 @@ void AlgorithmBase::sense(uint16_t dt){
     _hwd->gyro->read();
     //_hwd->proxSensors->read();
 
-    logger.printMagX(_hwd->compass->m.y);
-    logger.printAccX(_hwd->compass->m.z);
+    //logger.printMagX(_hwd->compass->m.y);
+    //logger.printAccX(_hwd->compass->m.z);
 
     _accelX = _accelXFilter->getFilteredValue(_hwd->compass->a.x/16);
     _accelY = _accelYFilter->getFilteredValue(_hwd->compass->a.y/16);
