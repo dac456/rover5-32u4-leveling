@@ -19,11 +19,23 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/AStar32U4)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LSM303)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/L3G)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LPS)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Pololu/PololuWheelEncoders)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Pololu/OrangutanDigital)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Pololu/OrangutanResources)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Pololu/OrangutanResources/include)
 
 #print_board_list()
 #print_programmer_list()
 
-file(GLOB C_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINKS src/*.cpp src/*.c Wire/*.cpp Wire/utility/*.c AStar32U4/*.cpp LSM303/*.cpp L3G/*.cpp LPS/*.cpp)
+file(GLOB C_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINKS
+    src/*.cpp src/*.c
+    Wire/*.cpp Wire/utility/*.c
+    AStar32U4/*.cpp
+    LSM303/*.cpp
+    L3G/*.cpp
+    LPS/*.cpp
+    Pololu/*/*.cpp
+)
 
 
 generate_arduino_firmware(rover5-leveling

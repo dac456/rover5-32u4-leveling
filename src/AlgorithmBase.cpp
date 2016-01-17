@@ -1,3 +1,4 @@
+#include <PololuWheelEncoders.h>
 #include "AlgorithmBase.hpp"
 
 AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLinear, int16_t maxRpm)
@@ -29,6 +30,8 @@ AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLine
     //_heading = new LowpassFilter<float>(0.96f);
 
     _altFilter = new MovingAverage<float>(-92.0f);
+
+    encoders_init(4, 5, 6, 7);
 }
 
 AlgorithmBase::~AlgorithmBase(){
@@ -212,6 +215,9 @@ void AlgorithmBase::sense(uint16_t dt){
     }
 
     senseImpl(dt);
+
+    logger.printi('c', encoders_get_counts_m1());
+    logger.printi('d', encoders_get_counts_m2());
 }
 
 void AlgorithmBase::act(uint16_t dt){
