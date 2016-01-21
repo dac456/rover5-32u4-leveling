@@ -1,4 +1,3 @@
-#include <PololuWheelEncoders.h>
 #include "AlgorithmBase.hpp"
 
 AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLinear, int16_t maxRpm)
@@ -19,7 +18,7 @@ AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLine
 
     _accelXFilter = new LowpassFilter<int16_t>(0.75f);
     _accelYFilter = new LowpassFilter<int16_t>(0.75f);
-    _accelZFilter = new LowpassFilter<int16_t>(0.75f, -111);
+    _accelZFilter = new LowpassFilter<int16_t>(0.75f/*, -111*/);
 
     _rotXFilter = new MovingAverage<int16_t>();
     _rotYFilter = new MovingAverage<int16_t>();
@@ -30,8 +29,6 @@ AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLine
     //_heading = new LowpassFilter<float>(0.96f);
 
     _altFilter = new MovingAverage<float>(-92.0f);
-
-    encoders_init(4, 5, 6, 7);
 }
 
 AlgorithmBase::~AlgorithmBase(){
@@ -174,8 +171,6 @@ void AlgorithmBase::setDesiredLinearVelocity(float vel){
 
     _desiredLinearVelocity = vel;
     _clampSpeed();
-
-    logger.printf(PRINT_DESIRED_VEL, vel);
 }
 
 void AlgorithmBase::step(uint16_t dt){
@@ -215,9 +210,6 @@ void AlgorithmBase::sense(uint16_t dt){
     }
 
     senseImpl(dt);
-
-    logger.printi('c', encoders_get_counts_m1());
-    logger.printi('d', encoders_get_counts_m2());
 }
 
 void AlgorithmBase::act(uint16_t dt){

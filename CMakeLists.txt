@@ -19,10 +19,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/AStar32U4)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LSM303)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/L3G)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LPS)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Pololu/PololuWheelEncoders)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Pololu/OrangutanDigital)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Pololu/OrangutanResources)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Pololu/OrangutanResources/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/EnableInterrupt)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/EnableInterrupt/utility)
 
 #print_board_list()
 #print_programmer_list()
@@ -34,7 +32,6 @@ file(GLOB C_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINKS
     LSM303/*.cpp
     L3G/*.cpp
     LPS/*.cpp
-    Pololu/*/*.cpp
 )
 
 

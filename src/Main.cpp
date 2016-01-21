@@ -1,10 +1,21 @@
 #include "AlgorithmHillClimb.hpp"
 #include "Logger.hpp"
 
+#include <EnableInterrupt.h>
+
 RoverHardware* hwd;
 AlgorithmHillClimb* alg;
 
 AStar32U4ButtonA buttonA;
+
+
+void leftEncoder(){
+    hwd->encoders->handleM1Interrupt();
+}
+
+void rightEncoder(){
+    hwd->encoders->handleM2Interrupt();
+}
 
 void initialize(){
     init(); //AVR init - timers and things
@@ -25,36 +36,38 @@ void initialize(){
     hwd->altimeter->init();
     hwd->altimeter->enableDefault();
 
+    enableInterrupt(8, leftEncoder, CHANGE);
+    //enableInterrupt(10, rightEncoder, CHANGE);
+
     alg = new AlgorithmHillClimb(hwd, 10.0f, 0.27f, 86);
 
     randomSeed(analogRead(0));
 }
-
-
 
 int main(int argc, char* argv[])
 {
     initialize();
 
     static uint16_t last_time = 0;
+    static uint16_t last_time_print = 0;
     static bool stop = false;
 
-    buttonA.waitForButton();
+    //buttonA.waitForButton();
 
     while(1){
         uint16_t dt = millis() - last_time;
-        if(dt >= 100){
+        if(dt >= 10){
             alg->step(dt);
-
-            //Dump the Z reading from the accelerometer for debugging
-            char buf[8];
-            sprintf(buf, "%8.6f", alg->getRotZf());
-            Serial1.println(buf);
-            //hwd->lcd->gotoXY(0,1);
-            //hwd->lcd->print(buf);
-
-
             last_time = millis();
+        }
+
+        uint16_t dt_print = millis() - last_time_print;
+        if(dt_print >= 100){
+            char buf[8];
+            sprintf(buf, "%8.6f", alg->pitchFiltered());
+            Serial1.println(buf);
+
+            last_time_print = millis();
         }
     }
 

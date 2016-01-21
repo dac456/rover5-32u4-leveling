@@ -9,6 +9,7 @@
 #include <LSM303.h>
 #include <L3G.h>
 #include <LPS.h>
+#include "WheelEncoder.hpp"
 
 #include "MovingAverage.hpp"
 #include "CompFilter.hpp"
@@ -18,6 +19,7 @@
 struct RoverHardware{
     RoverHardware(){
         motors = new AStar32U4Motors;
+        encoders = new WheelEncoder(8,9,10,11);
         compass = new LSM303;
         gyro = new L3G;
         altimeter = new LPS;
@@ -27,9 +29,11 @@ struct RoverHardware{
         delete compass;
         delete gyro;
         delete altimeter;
+        delete encoders;
     }
 
     AStar32U4Motors* motors;
+    WheelEncoder* encoders;
     LSM303* compass;
     L3G* gyro;
     LPS* altimeter;
