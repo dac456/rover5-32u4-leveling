@@ -1,21 +1,10 @@
 #include "AlgorithmHillClimb.hpp"
 #include "Logger.hpp"
 
-#include <EnableInterrupt.h>
-
 RoverHardware* hwd;
 AlgorithmHillClimb* alg;
 
 AStar32U4ButtonA buttonA;
-
-
-void leftEncoder(){
-    hwd->encoders->handleM1Interrupt();
-}
-
-void rightEncoder(){
-    hwd->encoders->handleM2Interrupt();
-}
 
 void initialize(){
     init(); //AVR init - timers and things
@@ -36,8 +25,7 @@ void initialize(){
     hwd->altimeter->init();
     hwd->altimeter->enableDefault();
 
-    enableInterrupt(8, leftEncoder, CHANGE);
-    //enableInterrupt(10, rightEncoder, CHANGE);
+    hwd->encoders->init();
 
     alg = new AlgorithmHillClimb(hwd, 10.0f, 0.27f, 86);
 
@@ -63,8 +51,8 @@ int main(int argc, char* argv[])
 
         uint16_t dt_print = millis() - last_time_print;
         if(dt_print >= 100){
-            char buf[8];
-            sprintf(buf, "%8.6f", alg->pitchFiltered());
+            char buf[32];
+            sprintf(buf, "L: %i R: %i", hwd->encoders->getCountsLeft(), hwd->encoders->getCountsRight());
             Serial1.println(buf);
 
             last_time_print = millis();

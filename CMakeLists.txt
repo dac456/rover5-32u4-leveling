@@ -19,8 +19,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/AStar32U4)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LSM303)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/L3G)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LPS)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/EnableInterrupt)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/EnableInterrupt/utility)
 
 #print_board_list()
 #print_programmer_list()
