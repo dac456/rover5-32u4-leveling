@@ -16,6 +16,8 @@
 #include "LowpassFilter.hpp"
 #include "Queue.hpp"
 
+#define ENCODER_TPR 333 //Ticks per revolution
+
 struct RoverHardware{
     RoverHardware(){
         motors = new AStar32U4Motors;
