@@ -11,6 +11,7 @@ typedef enum{
 
 typedef enum{
     PRINT_PITCH = 'a',
+    PRINT_HEADING,
     PRINT_DESIRED_VEL
 } LOG_TYPE;
 

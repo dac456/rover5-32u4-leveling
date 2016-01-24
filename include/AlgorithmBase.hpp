@@ -19,9 +19,9 @@ private:
     int16_t _accelY;
     int16_t _accelZ;
 
-    MovingAverage<int16_t>* _rotXFilter;
-    MovingAverage<int16_t>* _rotYFilter;
-    MovingAverage<int16_t>* _rotZFilter;
+    LowpassFilter<int16_t>* _rotXFilter;
+    LowpassFilter<int16_t>* _rotYFilter;
+    LowpassFilter<int16_t>* _rotZFilter;
     int16_t _rotX;
     int16_t _rotY;
     int16_t _rotZ;
@@ -53,26 +53,22 @@ public:
 
     char* getName();
 
-    int16_t getAccelX();
-    int16_t getAccelY();
-    int16_t getAccelZ();
+    float getAccelX();
+    float getAccelY();
+    float getAccelZ();
 
-    float getAccelXf();
-    float getAccelYf();
-    float getAccelZf();
+    float getRotX();
+    float getRotY();
+    float getRotZ();
 
-    float getRotXf();
-    float getRotYf();
-    float getRotZf();
+    float getPitch();
+    float getRoll();
+    float getYaw();
 
-    float pitch();
-    float roll();
-    float yaw();
+    float getPitchFiltered();
+    float getYawFiltered();
 
-    float pitchFiltered();
-    float yawFiltered();
-
-    float altitude();
+    float getAltitude();
 
     bool isColliding(float threshold);
 

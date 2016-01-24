@@ -42,6 +42,8 @@ int main(int argc, char* argv[])
 
     //buttonA.waitForButton();
 
+    Logger logger;
+
     while(1){
         uint16_t dt = millis() - last_time;
         if(dt >= 10){
@@ -51,9 +53,12 @@ int main(int argc, char* argv[])
 
         uint16_t dt_print = millis() - last_time_print;
         if(dt_print >= 100){
-            char buf[32];
+            /*char buf[32];
             sprintf(buf, "L: %i R: %i", hwd->encoders->getCountsLeft(), hwd->encoders->getCountsRight());
-            Serial1.println(buf);
+            Serial1.println(buf);*/
+
+            logger.printf(PRINT_PITCH, alg->getPitchFiltered());
+            logger.printf(PRINT_HEADING, alg->getYawFiltered());
 
             last_time_print = millis();
         }

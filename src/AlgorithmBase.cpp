@@ -18,14 +18,14 @@ AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLine
 
     _accelXFilter = new LowpassFilter<int16_t>(0.75f);
     _accelYFilter = new LowpassFilter<int16_t>(0.75f);
-    _accelZFilter = new LowpassFilter<int16_t>(0.75f/*, -111*/);
+    _accelZFilter = new LowpassFilter<int16_t>(0.75f, -20);
 
-    _rotXFilter = new MovingAverage<int16_t>();
-    _rotYFilter = new MovingAverage<int16_t>();
-    _rotZFilter = new MovingAverage<int16_t>();
+    _rotXFilter = new LowpassFilter<int16_t>(0.98f);
+    _rotYFilter = new LowpassFilter<int16_t>(0.98f);
+    _rotZFilter = new LowpassFilter<int16_t>(0.98f);
 
     _pitch = new CompFilter<float>(0.98f);
-    _heading = new CompFilter<float>(0.5f);
+    _heading = new CompFilter<float>(0.98f);
     //_heading = new LowpassFilter<float>(0.96f);
 
     _altFilter = new MovingAverage<float>(-92.0f);
@@ -50,68 +50,56 @@ char* AlgorithmBase::getName(){
     return _name;
 }
 
-int16_t AlgorithmBase::getAccelX(){
-    return _accelX;
-}
-
-int16_t AlgorithmBase::getAccelY(){
-    return _accelY;
-}
-
-int16_t AlgorithmBase::getAccelZ(){
-    return _accelZ;
-}
-
 /* http://cegt201.bradley.edu/projects/proj2015/autonomous_underwater_robots/Deliverables/Doxygen_Report_2_13_2015/_l_s_m303_d_8c_source.xhtml */
-float AlgorithmBase::getAccelXf(){
+float AlgorithmBase::getAccelX(){
     return static_cast<float>(_accelX) / 104.41575f;
 }
 
-float AlgorithmBase::getAccelYf(){
+float AlgorithmBase::getAccelY(){
     return static_cast<float>(_accelY) / 104.41575f;
 }
 
-float AlgorithmBase::getAccelZf(){
+float AlgorithmBase::getAccelZ(){
     return static_cast<float>(_accelZ) / 104.41575f;
 }
 
-float AlgorithmBase::getRotXf(){
+float AlgorithmBase::getRotX(){
     return (static_cast<float>(_rotX) * 8.75f) / 1000.0f;
 }
 
-float AlgorithmBase::getRotYf(){
+float AlgorithmBase::getRotY(){
     return (static_cast<float>(_rotY) * 8.75f) / 1000.0f;
 }
 
-float AlgorithmBase::getRotZf(){
+float AlgorithmBase::getRotZ(){
     return (static_cast<float>(_rotZ) * 8.75f) / 1000.0f;
 }
 
-float AlgorithmBase::pitch(){
+float AlgorithmBase::getPitch(){
     //return atan2(_accelX, sqrt(_accelY*_accelY + _accelZ*_accelZ));
     uint16_t y2 = uint16_t(_accelY*_accelY);
     uint16_t z2 = uint16_t(_accelZ*_accelZ);
     return atan(float(_accelX) / sqrt(y2+z2));
 }
 
-float AlgorithmBase::roll(){
+float AlgorithmBase::getRoll(){
     return atan(float(-_accelY) / float(_accelZ));
     //return atan2(_accelY, sqrt(_accelY*_accelY + _accelX*_accelX));
 }
 
-float AlgorithmBase::yaw(){
-    return _hwd->compass->heading(LSM303::vector<int>{1,0,0});
+float AlgorithmBase::getYaw(){
+    return _hwd->compass->heading(LSM303::vector<int>{1,0,0})*(M_PI/180.0);
 }
 
-float AlgorithmBase::pitchFiltered(){
+float AlgorithmBase::getPitchFiltered(){
     return _pitch->getFilteredValue();
 }
 
-float AlgorithmBase::yawFiltered(){
+float AlgorithmBase::getYawFiltered(){
     return _heading->getFilteredValue();
 }
 
-float AlgorithmBase::altitude(){
+float AlgorithmBase::getAltitude(){
     return _altitude;
 }
 
@@ -194,15 +182,15 @@ void AlgorithmBase::sense(uint16_t dt){
     _rotY = _rotYFilter->getFilteredValue(_hwd->gyro->g.y);
     _rotZ = _rotZFilter->getFilteredValue(_hwd->gyro->g.z);
 
-    if(!isnan(this->pitch())){
-        _pitch->integrateValues(-this->getRotYf(), this->pitch() * (180.0f/M_PI), dt);
+    if(!isnan(this->getPitch())){
+        _pitch->integrateValues(this->getRotY(), this->getPitch() * (180.0f/M_PI), dt);
     }
-    _heading->integrateValues(this->getRotZf(), this->yaw(), dt);
+    _heading->integrateValues(this->getRotZ(), this->getYaw() * (180.0f/M_PI), dt);
 
     _altitude = _altFilter->getFilteredValue(_hwd->altimeter->pressureToAltitudeMeters(_hwd->altimeter->readPressureMillibars()));
 
-    float Xf = getAccelXf();
-    float Yf = getAccelYf();
+    float Xf = getAccelX();
+    float Yf = getAccelY();
     float mag = sqrt(Xf*Xf + Yf*Yf);
     _xyMag.push(mag);
     if(_xyMag.size() > 10){

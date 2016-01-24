@@ -25,11 +25,11 @@ AlgorithmHillClimb::~AlgorithmHillClimb(){
 }
 
 void AlgorithmHillClimb::senseImpl(uint16_t dt){
-    (getAccelZ() < 950) ? _inclined = true : _inclined = false;
+    (getAccelZ() < 9.0f) ? _inclined = true : _inclined = false;
 }
 
 void AlgorithmHillClimb::actImpl(uint16_t dt){
-    _headingPid->step(yawFiltered(), dt);
+    _headingPid->step(getYawFiltered(), dt);
 
     /*if(!isColliding(0.5f) && (_reverseCount = 0)){
         setDesiredLinearVelocity(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.1f);
@@ -48,7 +48,7 @@ void AlgorithmHillClimb::actImpl(uint16_t dt){
 
     if(_reversing){
         _reverseCount++;
-        setDesiredLinearVelocity(-(((fabs(pitchFiltered())/90.0f) * 0.27) + 0.1f));
+        setDesiredLinearVelocity(-(((fabs(getPitchFiltered())/90.0f) * 0.27) + 0.1f));
         setDesiredAngularVelocity(1.5f);
         move();
 
@@ -58,7 +58,7 @@ void AlgorithmHillClimb::actImpl(uint16_t dt){
         }
     }
     else{
-        setDesiredLinearVelocity(((fabs(pitchFiltered())/90.0f) * 0.27) + 0.1f);
+        setDesiredLinearVelocity(((fabs(getPitchFiltered())/90.0f) * 0.27) + 0.1f);
         setDesiredAngularVelocity(0.0f);
         move();
     }
