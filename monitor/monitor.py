@@ -13,6 +13,8 @@ if __name__ == '__main__':
 
         pitch = []
         heading = []
+        x = []
+        y = []
 
         print "Press Ctrl+C to break and gerate plots."
 
@@ -36,6 +38,20 @@ if __name__ == '__main__':
                             heading.append(v)
                         except ValueError:
                             pass
+                    if(line[0] == 'x'):
+                        line = line[1:]
+                        try:
+                            v = float(line)
+                            x.append(v)
+                        except ValueError:
+                            pass
+                    if(line[0] == 'y'):
+                        line = line[1:]
+                        try:
+                            v = float(line)
+                            y.append(v)
+                        except ValueError:
+                            pass
             except KeyboardInterrupt:
                 break
 
@@ -50,9 +66,13 @@ if __name__ == '__main__':
         #ax[0,1].set_xlabel("Timesteps (100ms)")
         ax[0,1].plot([i for i in range(len(heading))], heading)
 
-        """ax[1,0].set_title("Forward Speed")
+        """ax[1,0].set_title("Position")
         ax[1,0].set_xlabel("Timesteps (100ms)")
-        ax[1,0].plot([i for i in range(len(forward_speeds))], forward_speeds)
+        y2 = []
+        for i in range(len(x)):
+            y2.append(x[i])
+        ax[1,0].scatter(y2,x)
+        ax[1,0].plot()
 
         ax[1,1].set_title("Heading")
         ax[1,1].set_xlabel("Timesteps (100ms)")

@@ -3,9 +3,12 @@
 
 #include "Common.hpp"
 #include "Logger.hpp"
+#include "Odometry.hpp"
 
 class AlgorithmBase{
 private:
+    Odometry _odom;
+    
     float _desiredLinearVelocity;
     float _desiredAngularVelocity;
     float _maxLinear;

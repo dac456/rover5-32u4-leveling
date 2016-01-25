@@ -44,7 +44,8 @@ static void rightISR()
     bool newRightB = FastGPIO::Pin<RIGHT_B>::isInputHigh();
     bool newRightA = FastGPIO::Pin<RIGHT_XOR>::isInputHigh() ^ newRightB;
 
-    countRight += (newRightA ^ lastRightB) - (lastRightA ^ newRightB);
+    //Counts are reversed for some reason - fixing in software
+    countRight -= (newRightA ^ lastRightB) - (lastRightA ^ newRightB);
 
     if((lastRightA ^ newRightA) & (lastRightB ^ newRightB))
     {

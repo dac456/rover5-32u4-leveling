@@ -123,8 +123,8 @@ bool AlgorithmBase::isColliding(float threshold){
 }
 
 void AlgorithmBase::move(){
-    const float r = 0.03f; //wheel radius (m)
-    const float L = 0.153f; //wheel base (m)
+    const float r = WHEEL_RADIUS; //wheel radius (m)
+    const float L = WHEEL_BASE; //wheel base (m)
 
     float vLeft = ((2.0f*_desiredLinearVelocity) - (L*_desiredAngularVelocity)) / (2.0f*r); //rad/s
     float vRight = ((2.0f*_desiredLinearVelocity) + (L*_desiredAngularVelocity)) / (2.0f*r); //rad/s
@@ -197,6 +197,7 @@ void AlgorithmBase::sense(uint16_t dt){
         _xyMag.pop();
     }
 
+    _odom.integrate(_hwd->encoders->getCountsAndResetLeft(), _hwd->encoders->getCountsAndResetRight(), dt);
     senseImpl(dt);
 }
 

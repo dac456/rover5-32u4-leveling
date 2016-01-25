@@ -16,7 +16,9 @@
 #include "LowpassFilter.hpp"
 #include "Queue.hpp"
 
-#define ENCODER_TPR 333 //Ticks per revolution
+#define ENCODER_TPR 333.3f //Ticks per revolution
+#define WHEEL_RADIUS 0.03f
+#define WHEEL_BASE 0.153f
 
 struct RoverHardware{
     RoverHardware(){
