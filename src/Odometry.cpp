@@ -28,9 +28,14 @@ void Odometry::integrate(int leftCount, int rightCount, uint16_t dt){
 
         float r = (WHEEL_BASE*(velLeft + velRight)) / (2.0f*(velRight - velLeft));
         if(!isnan(r)){
-            _poseRobot.x += -r*sin(_poseRobot.theta) + r*sin(_poseRobot.theta + _angularVelocity*dtf);
-            _poseRobot.y += r*cos(_poseRobot.theta) - r*cos(_poseRobot.theta + _angularVelocity*dtf);
-            _poseRobot.theta += _angularVelocity*dtf;
+            if(isinf(r)){
+                //TODO: straight line
+            }
+            else{
+                _poseRobot.x += -r*sin(_poseRobot.theta) + r*sin(_poseRobot.theta + _angularVelocity*dtf);
+                _poseRobot.y += r*cos(_poseRobot.theta) - r*cos(_poseRobot.theta + _angularVelocity*dtf);
+                _poseRobot.theta += _angularVelocity*dtf;
+            }
 
             logger.printf('x', _poseRobot.x);
             logger.printf('y', _poseRobot.y);
