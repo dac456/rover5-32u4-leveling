@@ -29,7 +29,9 @@ void Odometry::integrate(int leftCount, int rightCount, uint16_t dt){
         float r = (WHEEL_BASE*(velLeft + velRight)) / (2.0f*(velRight - velLeft));
         if(!isnan(r)){
             if(isinf(r)){
-                //TODO: straight line
+                //TODO: why distLeft and distRight? does it matter if both are the same?
+                _poseRobot.x += distLeft*cos(_poseRobot.theta);
+                _poseRobot.y += distRight*sin(_poseRobot.theta);
             }
             else{
                 _poseRobot.x += -r*sin(_poseRobot.theta) + r*sin(_poseRobot.theta + _angularVelocity*dtf);
