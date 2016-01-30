@@ -18,16 +18,20 @@ struct Pose{
 
 class Odometry{
 private:
-    Pose _poseRobot;
+    AlgorithmBase* _alg;
+    Pose _pose;
 
     float _linearVelocity;
     float _angularVelocity;
 
 public:
-    Odometry();
+    Odometry(AlgorithmBase* alg);
     ~Odometry();
 
     void integrate(int leftCount, int rightCount, uint16_t dt);
+
+    float getLinearVelocity();
+    float getAngularVelocity();
 
 };
 

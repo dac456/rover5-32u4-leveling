@@ -52,12 +52,13 @@ int main(int argc, char* argv[])
         }
 
         uint16_t dt_print = millis() - last_time_print;
-        if(dt_print >= 100){
+        if(dt_print >= 500){
             /*char buf[32];
             sprintf(buf, "L: %i R: %i", hwd->encoders->getCountsLeft(), hwd->encoders->getCountsRight());
             Serial1.println(buf);*/
 
-            //logger.printf(PRINT_PITCH, alg->getPitchFiltered());
+            logger.printf(PRINT_PITCH, alg->getPitchFiltered());
+            logger.printf('b', alg->getPitch()*(180.0f/M_PI));
             //logger.printf(PRINT_HEADING, alg->getYawFiltered());
 
             last_time_print = millis();

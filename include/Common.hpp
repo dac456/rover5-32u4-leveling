@@ -19,6 +19,7 @@
 #define ENCODER_TPR 333.3f //Ticks per revolution
 #define WHEEL_RADIUS 0.03f
 #define WHEEL_BASE 0.153f
+#define WHEEL_BASE_INV 6.535f;
 
 struct RoverHardware{
     RoverHardware(){
@@ -42,5 +43,8 @@ struct RoverHardware{
     L3G* gyro;
     LPS* altimeter;
 };
+
+//Forward declaration
+class AlgorithmBase;
 
 #endif

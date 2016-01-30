@@ -8,7 +8,7 @@
 class AlgorithmBase{
 private:
     Odometry _odom;
-    
+
     float _desiredLinearVelocity;
     float _desiredAngularVelocity;
     float _maxLinear;
@@ -29,8 +29,10 @@ private:
     int16_t _rotY;
     int16_t _rotZ;
 
-    CompFilter<float>* _pitch;
-    CompFilter<float>* _heading;
+    float _pitch;
+
+    CompFilter<float>* _pitchFiltered;
+    CompFilter<float>* _headingFiltered;
     //LowpassFilter<float>* _heading;
 
     MovingAverage<float>* _altFilter;

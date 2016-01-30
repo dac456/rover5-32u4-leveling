@@ -1,12 +1,13 @@
 #include "AlgorithmBase.hpp"
 
 AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLinear, int16_t maxRpm)
-    : //_hwd(hwd),
+    : _odom(this),
       _maxAngular(maxAngular),
       _maxLinear(maxLinear),
       _maxRpm(maxRpm),
       _accelY(0),
       _accelZ(0),
+      _pitch(0.0f),
       _altitude(0.0f),
       _timeLastTurn(0),
       _timeLastCollision(0),
@@ -16,17 +17,17 @@ AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLine
 {
     _hwd = hwd;
 
-    _accelXFilter = new LowpassFilter<int16_t>(0.75f);
-    _accelYFilter = new LowpassFilter<int16_t>(0.75f);
+    _accelXFilter = new LowpassFilter<int16_t>(0.75f, 35);
+    _accelYFilter = new LowpassFilter<int16_t>(0.75f, 40);
     _accelZFilter = new LowpassFilter<int16_t>(0.75f, -20);
 
     _rotXFilter = new LowpassFilter<int16_t>(0.98f);
-    _rotYFilter = new LowpassFilter<int16_t>(0.98f);
+    _rotYFilter = new LowpassFilter<int16_t>(0.98f, 90);
     _rotZFilter = new LowpassFilter<int16_t>(0.98f);
 
-    _pitch = new CompFilter<float>(0.98f);
-    _heading = new CompFilter<float>(0.98f);
-    //_heading = new LowpassFilter<float>(0.96f);
+    _pitchFiltered = new CompFilter<float>(0.98f);
+    _headingFiltered = new CompFilter<float>(0.98f);
+    //_headingFiltered = new LowpassFilter<float>(0.96f);
 
     _altFilter = new MovingAverage<float>(-92.0f);
 }
@@ -40,8 +41,8 @@ AlgorithmBase::~AlgorithmBase(){
     delete _rotYFilter;
     delete _rotZFilter;
 
-    delete _pitch;
-    delete _heading;
+    delete _pitchFiltered;
+    delete _headingFiltered;
 
     delete _altFilter;
 }
@@ -92,11 +93,11 @@ float AlgorithmBase::getYaw(){
 }
 
 float AlgorithmBase::getPitchFiltered(){
-    return _pitch->getFilteredValue();
+    return _pitchFiltered->getFilteredValue();
 }
 
 float AlgorithmBase::getYawFiltered(){
-    return _heading->getFilteredValue();
+    return _headingFiltered->getFilteredValue();
 }
 
 float AlgorithmBase::getAltitude(){
@@ -169,6 +170,8 @@ void AlgorithmBase::step(uint16_t dt){
 }
 
 void AlgorithmBase::sense(uint16_t dt){
+    float dtf = dt/1000.0f;
+
     _hwd->compass->read();
     _hwd->gyro->read();
     //_hwd->proxSensors->read();
@@ -184,10 +187,14 @@ void AlgorithmBase::sense(uint16_t dt){
     _rotY = _rotYFilter->getFilteredValue(_hwd->gyro->g.y);
     _rotZ = _rotZFilter->getFilteredValue(_hwd->gyro->g.z);
 
+    //Integrate pitch reported by gyro
+    _pitch += this->getRotY() * dtf;
+    //logger.printf('c', this->getPitch() * (180.0f/M_PI));
+
     if(!isnan(this->getPitch())){
-        _pitch->integrateValues(this->getRotY(), this->getPitch() * (180.0f/M_PI), dt);
+        _pitchFiltered->integrateValues(this->getRotY(), this->getPitch() * (180.0f/M_PI), dt);
     }
-    _heading->integrateValues(this->getRotZ(), this->getYaw() * (180.0f/M_PI), dt);
+    _headingFiltered->integrateValues(this->getRotZ(), this->getYaw() * (180.0f/M_PI), dt);
 
     _altitude = _altFilter->getFilteredValue(_hwd->altimeter->pressureToAltitudeMeters(_hwd->altimeter->readPressureMillibars()));
 
