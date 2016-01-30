@@ -4,6 +4,7 @@
 #include "Common.hpp"
 
 struct Pose{
+    Mat33<float> R;
     float x, y, z;
     float theta;
 

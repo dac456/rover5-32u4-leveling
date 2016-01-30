@@ -15,6 +15,8 @@
 #include "CompFilter.hpp"
 #include "LowpassFilter.hpp"
 #include "Queue.hpp"
+#include "Mat33.hpp"
+#include "Vec3.hpp"
 
 #define ENCODER_TPR 333.3f //Ticks per revolution
 #define WHEEL_RADIUS 0.03f
