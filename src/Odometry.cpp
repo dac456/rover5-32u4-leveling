@@ -22,11 +22,13 @@ void Odometry::integrate(int leftCount, int rightCount, uint16_t dt){
         float distLeft = 2.0f*M_PI*WHEEL_RADIUS*(leftCount/ENCODER_TPR);
         float distRight = 2.0*M_PI*WHEEL_RADIUS*(rightCount/ENCODER_TPR);
 
-        float velLeft = distLeft/dtf;
-        float velRight = distRight/dtf;
+        //float velLeft = distLeft/dtf;
+        //float velRight = distRight/dtf;
+        float velLeft = (M_PI*(leftCount/ENCODER_TPR))/dtf;
+        float velRight = (M_PI*(rightCount/ENCODER_TPR))/dtf;
 
-        _linearVelocity = (velLeft + velRight) * 0.5f;
-        _angularVelocity = (velRight - velLeft) * WHEEL_BASE_INV;
+        _linearVelocity = (WHEEL_RADIUS*(velLeft + velRight)) * 0.5f;
+        _angularVelocity = (WHEEL_RADIUS*(velRight - velLeft)) * WHEEL_BASE_INV;
 
         float r = (WHEEL_BASE*(velLeft + velRight)) / (2.0f*(velRight - velLeft));
         if(!isnan(r)){
@@ -45,6 +47,10 @@ void Odometry::integrate(int leftCount, int rightCount, uint16_t dt){
             //logger.printf('y', _pose.y);
         }
     }
+}
+
+Pose Odometry::getPose(){
+    return _pose;
 }
 
 float Odometry::getLinearVelocity(){

@@ -31,6 +31,8 @@ public:
 
     void integrate(int leftCount, int rightCount, uint16_t dt);
 
+    Pose getPose();
+
     float getLinearVelocity();
     float getAngularVelocity();
 

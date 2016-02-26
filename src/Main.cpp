@@ -57,8 +57,9 @@ int main(int argc, char* argv[])
             sprintf(buf, "L: %i R: %i", hwd->encoders->getCountsLeft(), hwd->encoders->getCountsRight());
             Serial1.println(buf);*/
 
-            logger.printf(PRINT_PITCH, alg->getPitchFiltered());
-            logger.printf('b', alg->getPitch()*(180.0f/M_PI));
+            //logger.printf(PRINT_PITCH, alg->getPitchFiltered());
+            //logger.printf('b', alg->getPitch()*(180.0f/M_PI));
+            //logger.printi('a', hwd->gyro->g.z);
             //logger.printf(PRINT_HEADING, alg->getYawFiltered());
 
             last_time_print = millis();

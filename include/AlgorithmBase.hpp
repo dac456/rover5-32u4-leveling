@@ -29,7 +29,9 @@ private:
     int16_t _rotY;
     int16_t _rotZ;
 
+    //TODO: integrate Euler angles from Gyro - keep?
     float _pitch;
+    float _yaw;
 
     CompFilter<float>* _pitchFiltered;
     CompFilter<float>* _headingFiltered;

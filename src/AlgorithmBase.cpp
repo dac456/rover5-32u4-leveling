@@ -8,6 +8,7 @@ AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLine
       _accelY(0),
       _accelZ(0),
       _pitch(0.0f),
+      _yaw(0.0f),
       _altitude(0.0f),
       _timeLastTurn(0),
       _timeLastCollision(0),
@@ -23,7 +24,7 @@ AlgorithmBase::AlgorithmBase(RoverHardware* hwd, float maxAngular, float maxLine
 
     _rotXFilter = new LowpassFilter<int16_t>(0.98f);
     _rotYFilter = new LowpassFilter<int16_t>(0.98f, 90);
-    _rotZFilter = new LowpassFilter<int16_t>(0.98f);
+    _rotZFilter = new LowpassFilter<int16_t>(0.98f, 320);
 
     _pitchFiltered = new CompFilter<float>(0.98f);
     _headingFiltered = new CompFilter<float>(0.98f);
@@ -187,8 +188,9 @@ void AlgorithmBase::sense(uint16_t dt){
     _rotY = _rotYFilter->getFilteredValue(_hwd->gyro->g.y);
     _rotZ = _rotZFilter->getFilteredValue(_hwd->gyro->g.z);
 
-    //Integrate pitch reported by gyro
+    //Integrate angles reported by gyro
     _pitch += this->getRotY() * dtf;
+    _yaw += this->getRotZ() * dtf;
     //logger.printf('c', this->getPitch() * (180.0f/M_PI));
 
     if(!isnan(this->getPitch())){
@@ -207,6 +209,21 @@ void AlgorithmBase::sense(uint16_t dt){
     }
 
     _odom.integrate(_hwd->encoders->getCountsAndResetLeft(), _hwd->encoders->getCountsAndResetRight(), dt);
+
+    float c = (_odom.getAngularVelocity()*(180.0f/M_PI))*dtf;
+    float d = (this->getRotZ())*dtf;
+
+    logger.printf('c', c);
+    logger.printf('d', d);
+
+    pinMode(13, OUTPUT);
+    if(fabs(c-d) > 0.125f){
+        digitalWrite(13, HIGH);
+    }
+    else{
+        digitalWrite(13, LOW);
+    }
+
     senseImpl(dt);
 }
 
