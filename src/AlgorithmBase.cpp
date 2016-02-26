@@ -129,8 +129,8 @@ void AlgorithmBase::move(){
 
     //float vLeft = ((2.0f*_desiredLinearVelocity) - (L*_desiredAngularVelocity)) / (2.0f*r); //rad/s
     //float vRight = ((2.0f*_desiredLinearVelocity) + (L*_desiredAngularVelocity)) / (2.0f*r); //rad/s
-    float vLeft = (_desiredLinearVelocity - (L*_desiredLinearVelocity*0.5f)) / r;
-    float vRight = (_desiredLinearVelocity + (L*_desiredLinearVelocity*0.5f)) / r;
+    float vLeft = (_desiredLinearVelocity - (L*_desiredAngularVelocity*0.5f)) / r;
+    float vRight = (_desiredLinearVelocity + (L*_desiredAngularVelocity*0.5f)) / r;
 
     //rad/s -> rpm
     int16_t rpmLeft = static_cast<int16_t>(floor(vLeft * 9.551f));
